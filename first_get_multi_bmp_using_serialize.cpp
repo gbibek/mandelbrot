@@ -1,4 +1,3 @@
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -247,7 +246,7 @@ int main(int argc, char * argv[])
     desc_commandline.add_options()
         ( "n-value",
           boost::program_options::value<int>()->default_value(1),
-          "n value for the Fibonacci function")
+          "n value for number of thread")
         ;
 
     
