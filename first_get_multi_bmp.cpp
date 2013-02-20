@@ -1,4 +1,3 @@
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -107,7 +106,7 @@ std::vector<int> do_the_pixel(double x, double y){
         i++;
 
     }
-   return each_pixel_vector;
+    return each_pixel_vector;
     
 
 }
