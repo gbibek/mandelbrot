@@ -6,8 +6,8 @@ mandelbrot
 2) CMakeLists.txt                            - you can change the name in add_hpx_executable, of cpp to help compile different file
 
 3) firstbmp.cpp                              - hpx-bmp code for creating mandelbrot set, This code has one defect.
-                                               It includes #include<hpx/hpx_main.hpp> 
-                                               #include<hpx/hpx_init.hpp> in the code which confuses the hpx and 
+                                               It includes include<hpx/hpx_main.hpp> 
+                                               include<hpx/hpx_init.hpp> in the code which confuses the hpx and 
                                                takes the command line argument even if it is not passed into
                                                hpx_main()
 
