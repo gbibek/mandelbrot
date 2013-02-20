@@ -13,3 +13,6 @@ mandelbrot
 
 6) first_get_multi_bmp.cpp - takes command-line argument n-value which will create n*n hpx-thread and each of those
                              hpx-thread will create the individual piece of the whole Mandelbrot set. 
+                             
+7)first_get_multi_bmp_     - takes command-line argument n-value which will create n*n hpx-thread and each of those
+  using_serialize.cpp        hpx-thread will create the individual piece of the whole Mandelbrot set and use serialize. 
