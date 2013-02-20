@@ -10,3 +10,6 @@ mandelbrot
 4) first_get_bmp.cpp       - hpx-bmp using hpx-get
 
 5) first_then_bmp.cpp      - hpx-bmp using hpx-then
+
+6) first_get_multi_bmp.cpp - takes command-line argument n-value which will create n*n hpx-thread and each of those
+                             hpx-thread will create the individual piece of the whole Mandelbrot set. 
