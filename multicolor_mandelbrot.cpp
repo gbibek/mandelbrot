@@ -66,9 +66,7 @@ int mandtest(double Cr, double Ci){
     double Zi = 0.0;
     int times = 0;
     double temp;
-    Zr = Zr+Cr;
-    Zi = Zi+Ci;
-          
+           
     while ((((Zr*Zr)+(Zi*Zi))<=4) && (times < maxiteration)){
         	
         temp  = (Zr*Zr)-(Zi*Zi);
