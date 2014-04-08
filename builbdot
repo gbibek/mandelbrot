@@ -1,0 +1,434 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using NGit;
+using NGit.Api;
+using NGit.Transport;
+using System.Threading;
+
+namespace GitBegin
+{
+	/// <summary>
+	/// Interaction logic for MainWindow.xaml
+	/// </summary>
+    
+	public partial class MainWindow : Window
+	{
+        string activeRepoPath = "";
+        NGit.Api.Git repository;
+        string activeURI = "";
+        BuildbotClass buildbot = new BuildbotClass();
+        string WorkingDirectoryPath = @"C:\clone_git\test_buildbot";
+      
+        
+       
+		public MainWindow()
+		{
+			this.InitializeComponent();
+            FileViewerGrid.Visibility = Visibility.Hidden;
+			MainMenuGrid.Visibility = Visibility.Visible;
+			CommitHistoryGrid.Visibility = Visibility.Hidden;
+			RepositoryCreationGrid.Visibility = Visibility.Hidden;
+			RepositorySelectGrid.Visibility = Visibility.Hidden;
+			CommitGrid.Visibility = Visibility.Hidden;
+			LoginGrid.Visibility = Visibility.Hidden;
+			PullGrid.Visibility = Visibility.Hidden;
+			RepositoryMainGrid.Visibility = Visibility.Hidden;
+			OpenRepoGrid.Visibility = Visibility.Hidden;
+			DeleteRepoBoxGrid.Visibility = Visibility.Hidden;
+			SettingsMenuGrid.Visibility = Visibility.Hidden;
+			HelpGrid.Visibility = Visibility.Hidden;
+            BuildbotGrid_green.Visibility = Visibility.Hidden;
+            BuildbotGrid_red.Visibility = Visibility.Hidden;
+            buildbot.ExecuteCommandAsync(WorkingDirectoryPath);
+		}
+
+		private void Button_Mouse_Enter(object sender, System.Windows.RoutedEventArgs e)
+		{
+			// TODO: Add event handler implementation here.
+		}
+		private void Go_To_MainMenuGrid(object sender, System.Windows.RoutedEventArgs e)
+		{
+            FileViewerGrid.Visibility = Visibility.Hidden;
+			MainMenuGrid.Visibility = Visibility.Visible;
+			CommitHistoryGrid.Visibility = Visibility.Hidden;
+			RepositoryCreationGrid.Visibility = Visibility.Hidden;
+			RepositorySelectGrid.Visibility = Visibility.Hidden;
+			CommitGrid.Visibility = Visibility.Hidden;
+			LoginGrid.Visibility = Visibility.Hidden;
+			PullGrid.Visibility = Visibility.Hidden;
+			RepositoryMainGrid.Visibility = Visibility.Hidden;
+			OpenRepoGrid.Visibility = Visibility.Hidden;
+			DeleteRepoBoxGrid.Visibility = Visibility.Hidden;
+		}
+        private void Clone_Repo_Button(object sender, System.Windows.RoutedEventArgs e)
+        {
+            //string rootedPath = Repository.Init(path + "\\" + name, bareRepo);
+            var credentials = new UsernamePasswordCredentialsProvider("michael4243", "surprises0");
+            activeRepoPath = FolderPathTextBox3.Text;
+            // Or globally as the default for each new command
+            CredentialsProvider.SetDefault(credentials);
+            // Let's clone the NGit repository
+            var clone = Git.CloneRepository()
+                .SetDirectory(@activeRepoPath)
+                .SetURI(activeURI);
+
+            // Execute and return the repository object we'll use for further commands
+            repository = clone.Call();
+            //Console.WriteLine(rootedPath);
+            Go_To_RepositoryMainGrid(sender, e);
+        }
+        private void Open_Repo_Button(object sender, System.Windows.RoutedEventArgs e)
+        {
+            string s = RepoNameTextBox1.Text + ".git";
+            activeURI = s;
+            var credentials = new UsernamePasswordCredentialsProvider("michael4243", "surprises0");
+
+            // Or globally as the default for each new command
+            CredentialsProvider.SetDefault(credentials);
+            Go_To_RepositoryMainGrid(sender, e);
+        }
+        private void Create_Repo_Button(object sender, System.Windows.RoutedEventArgs e)
+        {
+            string s = FolderPathTextBox.Text;
+            activeRepoPath = s;
+            activeURI = s;
+            bool bareRepo = (bool)BareRepo.IsChecked;
+            if (bareRepo == null)
+                bareRepo = false;
+            //Create_Repo(FolderPathTextBox.Text, RepoNameTextBox.Text, bareRepo);
+            
+            var clone = Git.Init()
+                .SetDirectory(@activeRepoPath)
+                .SetBare(bareRepo);
+
+            // Execute and return the repository object we'll use for further commands
+            repository = clone.Call();
+            Go_To_RepositoryMainGrid(sender, e);
+        }
+        private void Commit_Button(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var author = new PersonIdent("Michael", "mkell49@lsu.edu");
+            string message = FolderPathTextBox1.Text;
+
+            var commit = repository.Commit()
+                .SetMessage(message)
+                .SetAuthor(author)
+                .SetAll(true) // This automatically stages modified and deleted files
+                .Call();
+
+            // Our new commit's hash
+            var hash = commit.Id;
+            //using (var repo = new Repository(activeRepoPath))
+            //{
+
+                // Create the committer's signature and commit
+                //Signature author = new Signature("Default User", "email@email.com", DateTime.Now);
+                //Signature committer = author;
+                   
+                // Commit to the repository
+                //Commit commit = repo.Commit(message, author, committer);
+            //}
+
+        }
+
+        private void Push_Button(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var push = repository.Push().Call();
+            
+            
+            
+        }
+        private void Go_To_FileViewerGrid(object sender, System.Windows.RoutedEventArgs e)
+        {
+            FileViewerGrid.Visibility = Visibility.Visible;
+            MainMenuGrid.Visibility = Visibility.Hidden;
+            CommitHistoryGrid.Visibility = Visibility.Hidden;
+            RepositoryCreationGrid.Visibility = Visibility.Hidden;
+            RepositorySelectGrid.Visibility = Visibility.Hidden;
+            CommitGrid.Visibility = Visibility.Hidden;
+            LoginGrid.Visibility = Visibility.Hidden;
+            PullGrid.Visibility = Visibility.Hidden;
+            RepositoryMainGrid.Visibility = Visibility.Hidden;
+            OpenRepoGrid.Visibility = Visibility.Hidden;
+        }
+		private void Go_To_CommitHistoryGrid(object sender, System.Windows.RoutedEventArgs e)
+		{
+            FileViewerGrid.Visibility = Visibility.Hidden;
+			MainMenuGrid.Visibility = Visibility.Hidden;
+			CommitHistoryGrid.Visibility = Visibility.Visible;
+			RepositoryCreationGrid.Visibility = Visibility.Hidden;
+			RepositorySelectGrid.Visibility = Visibility.Hidden;
+			CommitGrid.Visibility = Visibility.Hidden;
+			LoginGrid.Visibility = Visibility.Hidden;
+			PullGrid.Visibility = Visibility.Hidden;
+			RepositoryMainGrid.Visibility = Visibility.Hidden;
+			OpenRepoGrid.Visibility = Visibility.Hidden;
+		}
+		private void Go_To_RepositoryCreationGrid(object sender, System.Windows.RoutedEventArgs e)
+		{
+            FileViewerGrid.Visibility = Visibility.Hidden;
+			MainMenuGrid.Visibility = Visibility.Hidden;
+			CommitHistoryGrid.Visibility = Visibility.Hidden;
+			RepositoryCreationGrid.Visibility = Visibility.Visible;
+			RepositorySelectGrid.Visibility = Visibility.Hidden;
+			CommitGrid.Visibility = Visibility.Hidden;
+			LoginGrid.Visibility = Visibility.Hidden;
+			PullGrid.Visibility = Visibility.Hidden;
+			RepositoryMainGrid.Visibility = Visibility.Hidden;
+			OpenRepoGrid.Visibility = Visibility.Hidden;
+		}
+		private void Go_To_RepositorySelectGrid(object sender, System.Windows.RoutedEventArgs e)
+		{
+            FileViewerGrid.Visibility = Visibility.Hidden;
+			MainMenuGrid.Visibility = Visibility.Hidden;
+			CommitHistoryGrid.Visibility = Visibility.Hidden;
+			RepositoryCreationGrid.Visibility = Visibility.Hidden;
+			RepositorySelectGrid.Visibility = Visibility.Visible;
+			CommitGrid.Visibility = Visibility.Hidden;
+			LoginGrid.Visibility = Visibility.Hidden;
+			PullGrid.Visibility = Visibility.Hidden;
+			RepositoryMainGrid.Visibility = Visibility.Hidden;
+			OpenRepoGrid.Visibility = Visibility.Hidden;
+		}
+		private void Go_To_CommitGrid(object sender, System.Windows.RoutedEventArgs e)
+		{
+            FileViewerGrid.Visibility = Visibility.Hidden;
+			MainMenuGrid.Visibility = Visibility.Hidden;
+			CommitHistoryGrid.Visibility = Visibility.Hidden;
+			RepositoryCreationGrid.Visibility = Visibility.Hidden;
+			RepositorySelectGrid.Visibility = Visibility.Hidden;
+			CommitGrid.Visibility = Visibility.Visible;
+			LoginGrid.Visibility = Visibility.Hidden;
+			PullGrid.Visibility = Visibility.Hidden;
+			RepositoryMainGrid.Visibility = Visibility.Hidden;
+			OpenRepoGrid.Visibility = Visibility.Hidden;
+		}
+		private void Go_To_LoginGrid(object sender, System.Windows.RoutedEventArgs e)
+		{
+            FileViewerGrid.Visibility = Visibility.Hidden;
+			MainMenuGrid.Visibility = Visibility.Hidden;
+			CommitHistoryGrid.Visibility = Visibility.Hidden;
+			RepositoryCreationGrid.Visibility = Visibility.Hidden;
+			RepositorySelectGrid.Visibility = Visibility.Hidden;
+			CommitGrid.Visibility = Visibility.Hidden;
+			LoginGrid.Visibility = Visibility.Visible;
+			PullGrid.Visibility = Visibility.Hidden;
+			RepositoryMainGrid.Visibility = Visibility.Hidden;
+			OpenRepoGrid.Visibility = Visibility.Hidden;
+		}
+		private void Go_To_PullGrid(object sender, System.Windows.RoutedEventArgs e)
+		{
+            FileViewerGrid.Visibility = Visibility.Hidden;
+			MainMenuGrid.Visibility = Visibility.Hidden;
+			CommitHistoryGrid.Visibility = Visibility.Hidden;
+			RepositoryCreationGrid.Visibility = Visibility.Hidden;
+			RepositorySelectGrid.Visibility = Visibility.Hidden;
+			CommitGrid.Visibility = Visibility.Hidden;
+			LoginGrid.Visibility = Visibility.Hidden;
+			PullGrid.Visibility = Visibility.Visible;
+			RepositoryMainGrid.Visibility = Visibility.Hidden;
+			OpenRepoGrid.Visibility = Visibility.Hidden;
+		}
+		private void Go_To_OpenRepoGrid(object sender, System.Windows.RoutedEventArgs e)
+		{
+            FileViewerGrid.Visibility = Visibility.Hidden;
+			MainMenuGrid.Visibility = Visibility.Hidden;
+			CommitHistoryGrid.Visibility = Visibility.Hidden;
+			RepositoryCreationGrid.Visibility = Visibility.Hidden;
+			RepositorySelectGrid.Visibility = Visibility.Hidden;
+			CommitGrid.Visibility = Visibility.Hidden;
+			LoginGrid.Visibility = Visibility.Hidden;
+			PullGrid.Visibility = Visibility.Hidden;
+			RepositoryMainGrid.Visibility = Visibility.Hidden;
+			OpenRepoGrid.Visibility = Visibility.Visible;
+		}
+		private void Go_To_RepositoryMainGrid(object sender, System.Windows.RoutedEventArgs e)
+		{
+            FileViewerGrid.Visibility = Visibility.Hidden;
+			MainMenuGrid.Visibility = Visibility.Hidden;
+			CommitHistoryGrid.Visibility = Visibility.Hidden;
+			RepositoryCreationGrid.Visibility = Visibility.Hidden;
+			RepositorySelectGrid.Visibility = Visibility.Hidden;
+			CommitGrid.Visibility = Visibility.Hidden;
+			LoginGrid.Visibility = Visibility.Hidden;
+			PullGrid.Visibility = Visibility.Hidden;
+			RepositoryMainGrid.Visibility = Visibility.Visible;
+			OpenRepoGrid.Visibility = Visibility.Hidden;
+			DeleteRepoBoxGrid.Visibility = Visibility.Hidden;
+            
+		}
+
+		private void RedXButtonClick(object sender, System.Windows.RoutedEventArgs e)
+		{
+			DeleteRepoBoxGrid.Visibility = Visibility.Visible;
+		}
+
+       
+	}
+
+
+    class BuildbotClass 
+    {
+        int result;
+        string activeURI = "git@github.com:gbibek/test_buildbot.git";
+        
+        
+        public BuildbotClass()
+        {
+            result = 1;
+            /*var clone = Git.CloneRepository()
+                .SetDirectory(activeRepopath)
+                .SetURI(activeURI);
+           
+            var repo = clone.Call();*/
+           
+        }
+        public void Merge()
+        {
+
+        }
+
+
+        public void print_result()
+        {
+            Console.WriteLine(result);
+        }
+
+
+        public void git_pool(object WorkingDirectory)
+        {
+            var repository = Git.Open((String)WorkingDirectory);
+            int test_value = 0;
+            ICollection<TrackingRefUpdate> refUpdate = null;
+           // string WorkingDirectory = @"C:\clone_git\test_buildbot";
+           
+            
+            // Console.WriteLine(repository.Status().Call().IsClean());
+            repository.Pull().Call();
+        //    ((MainWindow)System.Windows.Application.Current.MainWindow).BuildbotGrid_green.Dispatcher.Invoke(
+            while (test_value == 0)
+            {
+
+                // Console.WriteLine("test_value : {0} ---",test_value);
+                FetchResult result = repository.Fetch().Call();
+                refUpdate = result.GetTrackingRefUpdates();
+                test_value = refUpdate.Count;
+                // Console.Write(test_value);
+               
+
+            }
+            if (ExecuteCommand((String)WorkingDirectory) == 0)
+            {
+                 Application.Current.Dispatcher.BeginInvoke(
+              System.Windows.Threading.DispatcherPriority.Background,
+              new Action(() => ((MainWindow)System.
+                      Windows.Application.Current.MainWindow).
+                      BuildbotGrid_green.Visibility
+                      = Visibility.Visible));
+                 Thread.Sleep(10000);
+
+                 Application.Current.Dispatcher.BeginInvoke(
+              System.Windows.Threading.DispatcherPriority.Background,
+              new Action(() => ((MainWindow)System.
+                      Windows.Application.Current.MainWindow).
+                      BuildbotGrid_green.Visibility
+                      = Visibility.Hidden));
+
+ 
+            }
+            else
+            {
+
+                Application.Current.Dispatcher.BeginInvoke(
+              System.Windows.Threading.DispatcherPriority.Background,
+              new Action(() => ((MainWindow)System.
+                      Windows.Application.Current.MainWindow).
+                      BuildbotGrid_red.Visibility
+                      = Visibility.Visible));
+
+                Thread.Sleep(10000);
+
+                Application.Current.Dispatcher.BeginInvoke(
+              System.Windows.Threading.DispatcherPriority.Background,
+              new Action(() => ((MainWindow)System.
+                      Windows.Application.Current.MainWindow).
+                      BuildbotGrid_red.Visibility
+                      = Visibility.Hidden));
+
+            }
+            
+            //Console.WriteLine("Something changed");
+
+        }
+
+        public void ExecuteCommandAsync(string WorkingDirectoryPath)
+        {
+            try
+            {
+                Thread objThread = new Thread(new ParameterizedThreadStart(git_pool));
+                objThread.IsBackground = true;
+                objThread.Priority = ThreadPriority.AboveNormal;
+                objThread.Start(WorkingDirectoryPath);
+            }
+
+            catch (ThreadStartException objException)
+            {
+                // Log the exception
+                Console.WriteLine(objException.Message);
+            }
+            catch (ThreadAbortException objException)
+            {
+                // Log the exception
+                Console.WriteLine(objException.Message);
+            }
+            catch (Exception objException)
+            {
+                // Log the exception
+                Console.WriteLine(objException.Message);
+            }
+        }
+
+
+        public int ExecuteCommand(string WorkingDirectory)
+        {
+            int my_result;
+
+
+            System.Diagnostics.ProcessStartInfo procStartInfo =
+            new System.Diagnostics.ProcessStartInfo();
+
+
+            // The following commands are needed to redirect the standard output.
+            // This means that it will be redirected to the Process.StandardOutput StreamReader.
+            procStartInfo.RedirectStandardOutput = true;
+            procStartInfo.UseShellExecute = false;
+            procStartInfo.FileName = "csc";
+            procStartInfo.Arguments = "simple_hello_world.cs";
+            // Do not create the black window.
+            procStartInfo.CreateNoWindow = true;
+            procStartInfo.WorkingDirectory = WorkingDirectory;
+            // Now we create a process, assign its ProcessStartInfo and start it
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo = procStartInfo;
+            proc.Start();
+            // Get the output into a string
+            string result = proc.StandardOutput.ReadToEnd();
+
+            my_result = proc.ExitCode;
+
+            return my_result;
+
+        }
+
+
+    }
+}
