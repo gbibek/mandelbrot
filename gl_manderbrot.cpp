@@ -1,6 +1,14 @@
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#endif
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,67 +36,50 @@ void setXYpos(int px, int py)
 
 }
 
-	
-
-
 void MouseButton(int button,int state,int x,int y){
 	
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-	
-	int xx= x;
-        int yy= y;
-	setXYpos(xx,yy);
-	Size = 0.5*(pow(2.0,(-zoomlevel)));	
+        
+        int xx= x;
+            int yy= y;
+        setXYpos(xx,yy);
+        Size = 0.5*(pow(2.0,(-zoomlevel)));	
 
-	printf("Size = %f \n",Size);
-	left = xco - Size;
-	right = xco + Size;
-	top = yco + Size;
-	bottom = yco - Size;
-	dividecubesby = dividecubesby + 100;
-	maxiteration = maxiteration + 100;
-	zoomlevel = zoomlevel+1;
-	
-	
-	
-		
-	glutPostRedisplay();
-
-	
-		
-	
-
+        printf("Size = %f \n",Size);
+        left = xco - Size;
+        right = xco + Size;
+        top = yco + Size;
+        bottom = yco - Size;
+        dividecubesby = dividecubesby + 100;
+        maxiteration = maxiteration + 100;
+        zoomlevel = zoomlevel+1;
+        
+        glutPostRedisplay();
 	}
 
 	if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
 
-	
-	int xx= x;
-        int yy= y;
-	setXYpos(xx,yy);
-	zoomlevel = zoomlevel-1;
-	Size = 0.5*(pow(2.0,(-zoomlevel)));	
+        
+        int xx= x;
+            int yy= y;
+        setXYpos(xx,yy);
+        zoomlevel = zoomlevel-1;
+        Size = 0.5*(pow(2.0,(-zoomlevel)));	
 
-	printf("Size = %f \n",Size);
-	left = xco - Size;
-	right = xco + Size;
-	top = yco + Size;
-	bottom = yco - Size;
-	//dividecubesby = dividecubesby - 100;
-	//maxiteration = maxiteration - 100;
-	//zoomlevel = zoomlevel-1;
-	
-	
-	
-		
-	glutPostRedisplay();
+        printf("Size = %f \n",Size);
+        left = xco - Size;
+        right = xco + Size;
+        top = yco + Size;
+        bottom = yco - Size;
+        //dividecubesby = dividecubesby - 100;
+        //maxiteration = maxiteration - 100;
+        //zoomlevel = zoomlevel-1;
+            
+        glutPostRedisplay();
 
 	}
-
-
-
 }
 
 
@@ -137,41 +128,35 @@ void display(void)
        	
 	for(double x= left;x<=right;x += deltax ){
             for(double y= bottom; y<=top;y +=  deltay ){
-      		if((mandtest(x,y))==maxiteration){
-    			glColor3f(1.0f,1.0f,1.0f); 
-      			glVertex2f(x,y);
+      		    if((mandtest(x,y))==maxiteration){
+    			    glColor3f(1.0f,1.0f,1.0f); 
+      			    glVertex2f(x,y);
 			
-		}
-		else {
-			glColor3f((float)mandtest(x,y)/10,0.0f,(float)mandtest(x,y)/30);
-                        glVertex2f(x,y);
-		}
+		        }   
+		        else {
+			        glColor3f((float)mandtest(x,y)/10,0.0f,(float)mandtest(x,y)/30);
+                    glVertex2f(x,y);
+		        }   
 						
-	     }
-         }
-    	glEnd();
-	
+	        }
+    }
+    glEnd();
 	glFlush();
-	
 }
 
 void init(void)
 {
 	
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-    	//gluOrtho2D(-2,2,-2,2);
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-
-	
-    
-                       
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    //gluOrtho2D(-2,2,-2,2);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();                   
 }
 
 
 int main(int argc, char ** argv)
 {	
-	glutInit(&argc, argv);
+    glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 	glutInitWindowSize(dividecubesby,dividecubesby);
 	glutCreateWindow("A Simple OpenGL Windows Application with GLUT");
@@ -179,7 +164,5 @@ int main(int argc, char ** argv)
 	glutDisplayFunc(display);
 	glutMouseFunc(MouseButton);
 	glutMainLoop();
-
-
 return 0;
 }
